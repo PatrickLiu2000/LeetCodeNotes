@@ -28,6 +28,25 @@ https://www.youtube.com/user/tusharroy2525
 - simply reverse entire array, then first k elements, then the rest
 
 ## Move Zeros Right
+```java
+public void moveZeroes(int[] nums) {
+if (nums == null || nums.length == 0) {
+    return;
+}
+int zeroIndex = 0;
+for (int i = 0; i < nums.length; i++ ) {
+    if (nums[i] != 0) {
+        swap(zeroIndex, i, nums);
+        zeroIndex++;
+    }
+}
+}
+private void swap(int a, int b, int[] nums) {
+    int temp = nums[a];
+    nums[a] = nums[b];
+    nums[b] = temp;
+}
+```
 - use a 2 pointer strategy- 1 to keep track of zero index, 1 to iterate through all elements
     - swap if element is not zero
 
@@ -80,6 +99,33 @@ https://www.youtube.com/user/tusharroy2525
 - make dummy node list
 - advance pointers for list1 and list2 only when they have been added to combined list
 - watch out for last node
+
+## Merge K sorted lists
+- brute force - add all elements into array, sort array, then put all elements into new list
+- optimized: use priority queue:
+```java
+public ListNode mergeKLists(List<ListNode> lists) {
+    if (lists==null||lists.size()==0) return null;
+        
+    PriorityQueue<ListNode> queue= new PriorityQueue<ListNode>((first, second) -> first.val - second.val);
+    
+    ListNode dummy = new ListNode(0);
+    ListNode tail=dummy;
+    
+    for (ListNode node:lists)
+        if (node!=null)
+            queue.add(node);
+        
+    while (!queue.isEmpty()){
+        tail.next=queue.poll();
+        tail=tail.next;
+        
+        if (tail.next!=null)
+            queue.add(tail.next);
+    }
+    return dummy.next;
+}
+```
 
 ## Rotate List
 - simply make array circular by connecting head and tail, and the interate to pivot point and make it the head, while making the previous node's next null

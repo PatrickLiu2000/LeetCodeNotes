@@ -159,3 +159,122 @@ https://www.youtube.com/watch?v=Zq4upTEaQyM&t=609s
 - make a choice, and see if constraints are satisfied, then recurse on that decision
 - find goal-which is our base case
 - make sure to remove our decision if it doesn't satisfy the constraints
+
+## TinyURL
+- use built in hashcode to encode the url
+```java
+Map<Integer, String> map = new HashMap();
+String host = "http://tinyurl.com/";
+
+public String encode(String longUrl) {
+    int key = longUrl.hashCode();
+    map.put(key, longUrl);
+    return host+key;
+}
+
+public String decode(String shortUrl) {
+    int key = Integer.parseInt(shortUrl.replace(host,""));
+    return map.get(key);
+}
+```
+
+## Roman To Int
+```java
+public int romanToInt(String s) {
+    Map<Character, Integer> map = new HashMap<>();
+    map.put('I', 1);
+    map.put('V', 5);
+    map.put('X', 10);
+    map.put('L', 50);
+    map.put('C', 100);
+    map.put('D', 500);
+    map.put('M', 1000);
+    int returnNum = map.get(s.charAt(s.length() - 1));
+    for (int i = s.length() - 2; i >= 0; i--) {
+        if (map.get(s.charAt(i)) >= map.get(s.charAt(i + 1))) {
+            returnNum += map.get(s.charAt(i));
+        } else {
+            returnNum -= map.get(s.charAt(i));
+        }
+    }
+    return returnNum;
+}
+```
+## Hamming Distance
+```java
+int d = 0;
+int bitxor = x ^ y;
+
+while (bitxor > 0){
+    if (bitxor % 2 == 1){
+        d++;
+    }
+    bitxor = bitxor >> 1;
+}
+
+return d;
+```
+## Valid Parentheses
+- utilize a stack
+- if we encounter left brackets, push right bracket onto stack
+- if we encounter right bracket, check if stack is empty or if the last elem on the stack is a right bracket
+```java
+public boolean isValid(String s) {
+	Stack<Character> stack = new Stack<Character>();
+	for (char c : s.toCharArray()) {
+		if (c == '(')
+			stack.push(')');
+		else if (c == '{')
+			stack.push('}');
+		else if (c == '[')
+			stack.push(']');
+		else if (stack.isEmpty() || stack.pop() != c)
+			return false;
+	}
+	return stack.isEmpty();
+}
+```
+## Buy and Sell Stock
+- simply do 2 for loops, keeping track of the maximum difference
+
+## Product of Array Except Self
+- create array of left products, and array of right products, and multiply them together to create result array
+```java
+public int[] productExceptSelf(int[] nums) {
+    // Left is an array containing the left products
+    // i.e: left[i] = nums[0] * .... * nums[i-1]  * nums[i]
+    int[] left = new int[nums.length];
+    
+    // Right is an array containing the array products
+    //i.e: right[i] = nums[i] * nums[i+1]  * .... * nums[len(nums)]
+    int[] right = new int[nums.length];
+    
+    left[0] = 1;
+    for (int i = 1; i < nums.length; i++) {
+        left[i] = left[i-1] * nums[i-1];
+    }
+    
+    right[nums.length - 1] = 1;
+    for (int i = nums.length - 2; i >= 0; i--) {
+        right[i] = right[i+1] * nums[i+1];
+    }
+    
+    int[] product = new int[nums.length];
+    for (int i = 0; i < product.length; i++) {
+        product[i] = left[i] * right[i];
+    }
+    
+    return product;
+}
+```
+- naive solution:
+```java
+for (int i = 0; i < nums.length; i++) {
+		results[i] = 1;
+		for (int j = 0; j < nums.length; j++) {
+			if (i != j) {
+				result[i] *= nums[j];
+			}
+		}
+}
+```
